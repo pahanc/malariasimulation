@@ -83,7 +83,17 @@ MosquitoModel::MosquitoModel(
 
 void MosquitoModel::step(size_t new_total_M) {
     total_M = new_total_M;
-    boost::numeric::odeint::integrate_adaptive(rk, ode, state, t, t + dt, dt);
+    boost::numeric::odeint::integrate_adaptive(
+        rk,
+        ode,
+        state,
+        t,
+        t + dt,
+        dt
+    );
+    history_e.push_back(state[get_idx(ODEState::E)]);
+    history_l.push_back(state[get_idx(ODEState::L)]);
+    history_p.push_back(state[get_idx(ODEState::P)]);
     ++t;
 }
 
@@ -165,11 +175,4 @@ Rcpp::XPtr<process_t> create_ode_stepping_process_cpp(
         }),
         true
     );
-}
-
-
-//Exported for testing purposes
-//[[Rcpp::export]]
-void mosquito_model_step(Rcpp::XPtr<MosquitoModel> model, size_t total_M) {
-    model->step(total_M);
 }

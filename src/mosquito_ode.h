@@ -56,6 +56,9 @@ struct MosquitoModel {
     const std::vector<double> g; //fourier shape parameters
     const std::vector<double> h; //fourier shape parameters
     const double R_bar; //average rainfall
+    std::vector<double> history_e; 
+    std::vector<double> history_l; 
+    std::vector<double> history_p; 
     std::queue<double> lagged_incubating; //last tau values for incubating mosquitos
 
     MosquitoModel(
