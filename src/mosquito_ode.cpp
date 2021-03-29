@@ -84,6 +84,9 @@ MosquitoModel::MosquitoModel(
 void MosquitoModel::step(size_t new_total_M) {
     total_M = new_total_M;
     boost::numeric::odeint::integrate_adaptive(rk, ode, state, t, t + dt, dt);
+    history_e.push_back(state[get_idx(ODEState::E)]);
+    history_l.push_back(state[get_idx(ODEState::L)]);
+    history_p.push_back(state[get_idx(ODEState::P)]);
     ++t;
 }
 
