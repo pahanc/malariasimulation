@@ -90,6 +90,7 @@ void MosquitoModel::step(size_t new_total_M) {
     history_e.push_back(state[get_idx(ODEState::E)]);
     history_l.push_back(state[get_idx(ODEState::L)]);
     history_p.push_back(state[get_idx(ODEState::P)]);
+    cout << "history_e " << history_e[t] << endl;
     ++t;
 }
 
