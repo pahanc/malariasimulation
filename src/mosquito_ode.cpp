@@ -10,6 +10,7 @@
 #include "mosquito_ode.h"
 #include <sstream>
 #include <iostream>
+using namespace std;
 
 integration_function_t create_ode(MosquitoModel& model) {
     return [&model](const state_t& x , state_t& dxdt , double t) {
