@@ -33,7 +33,7 @@ integration_function_t create_ode(MosquitoModel& model) {
         dxdt[2] = x[get_idx(ODEState::L)] / model.dl //growth to pupae
             - x[get_idx(ODEState::P)] / model.dp //growth to adult
             - x[get_idx(ODEState::P)] * model.mup; // death of pupae
-	cout << "dxdt[2] " << dxdt[2] << endl;
+	Rcpp::Rcout << "dxdt[2] " << dxdt[2] << endl;
     };
 }
 
