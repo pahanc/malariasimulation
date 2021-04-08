@@ -11,15 +11,14 @@ initial_mosquito_counts <- function(parameters, foim = 0, m = NULL) {
     m <- parameters$total_M
   }
   omega <- calculate_omega(parameters)
-  n_E <- 2 * omega * parameters$mum * parameters$dl * (
-    1. + parameters$dpl * parameters$mup
-  ) * m
-
+  n_F <- 3 
   n_L <- 2 * parameters$mum * parameters$dl * (
     1. + parameters$dpl * parameters$mup
   ) * m
 
   n_P <- 2 * parameters$dpl * parameters$mum * m
+
+  n_T <-10
 
   n_Sm <- m * parameters$mum / (foim + parameters$mum)
 
@@ -31,7 +30,7 @@ initial_mosquito_counts <- function(parameters, foim = 0, m = NULL) {
 
   n_Im <- m * foim / (foim + parameters$mum) * incubation_survival
 
-  c(n_E, n_L, n_P, n_Sm, n_Pm, n_Im)
+  c(n_F, n_L, n_P, n_T, n_Sm, n_Pm, n_Im)
 }
 
 #' @title Calculate omega value

@@ -22,11 +22,12 @@
 
 /*
  * The states are:
- * 0 - E  - Early larval stage
- * 1 - L  - Late larval stage
- * 2 - P  - Pupal stage
+ * 0 - F  - Larval Food Supply
+ * 1 - L  - Larval Stage
+ * 2 - P  - Pupal Stage
+ * 3 - T -  Larval Development Time
  */
-enum class ODEState : size_t {E, L, P};
+enum class ODEState : size_t {F,L,P,T};
 
 // Provide a convenience function for getting at the index of an enumeration
 template<typename T>
@@ -35,7 +36,7 @@ constexpr auto get_idx(T value)
     return static_cast<std::underlying_type_t<T>>(value);
 }
 
-using state_t = std::array<double, 3>;
+using state_t = std::array<double, 4>;
 using integration_function_t = std::function<void (const state_t&, state_t&, double)>;
 
 struct MosquitoModel {
@@ -55,10 +56,12 @@ struct MosquitoModel {
     const double g0; //fourier shape parameter
     const std::vector<double> g; //fourier shape parameters
     const std::vector<double> h; //fourier shape parameters
+    std::vector<double> history_f; 
+    std::vector<double> history_m; 
     const double R_bar; //average rainfall
-    std::vector<double> history_e; 
-    std::vector<double> history_l; 
-    std::vector<double> history_p;
+    const double G0;
+    const double KF;
+    const double Amax;
     std::queue<double> lagged_incubating; //last tau values for incubating mosquitos
 
     MosquitoModel(
@@ -78,9 +81,14 @@ struct MosquitoModel {
         double g0,
         std::vector<double> g,
         std::vector<double> h,
-        double R_bar
+	std::vector<double> history_f, 
+        std::vector<double> history_m, 
+        double R_bar,
+	double G0,
+	double KF,
+	double Amax 
     );
-    virtual void step(size_t);
+    virtual void step(size_t,std::vector<double>, std::vector<double>);
     virtual state_t get_state();
     virtual ~MosquitoModel() {};
 private:

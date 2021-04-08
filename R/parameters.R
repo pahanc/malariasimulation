@@ -94,8 +94,10 @@
 #' * v - mortality scaling factor from severe disease
 #' * pcm - new-born clinical immunity relative to mother's
 #' * pvm - new-born severe immunity relative to mother's
-#' * me - early stage larval mortality rate
-#' * ml - late stage larval mortality rate
+#' * me - stage larval mortality rate
+#' * G0 - rate of laral food addition to the system
+#' * KF - parameter defining dependence of food consumption rate on food supply
+#' * Amax - maximum rate of food consumption
 #'
 #' carrying capacity parameters:
 #'
@@ -247,6 +249,9 @@ get_parameters <- function(overrides = list()) {
     dpl   = .643,
     mup   = .249,
     mum   = .249, #NOTE: set from sitefile
+    G0 = 2,
+    KF = 1,
+    Amax = 3,
     sigma_squared   = 1.67,
     n_heterogeneity_groups = 5,
     # immunity decay rates
