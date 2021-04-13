@@ -1,4 +1,5 @@
-ODE_INDICES <- c(E = 1, L = 2, P = 3)
+ODE_INDICES <- c(Fl = 1, L = 2, P = 3, Tl = 4)
+
 
 parameterise_ode <- function(parameters) {
   lapply(
@@ -6,8 +7,9 @@ parameterise_ode <- function(parameters) {
     function(p) {
       m <- p * parameters$total_M
       create_mosquito_model(
-        initial_mosquito_counts(parameters, 0, m)[ODE_INDICES],
-        parameters$beta,
+        #initial_mosquito_counts(parameters, 0, m)[ODE_INDICES],
+        c(5,0,10,0),
+	parameters$beta,
         parameters$del,
         parameters$me,
         p * calculate_carrying_capacity(parameters),
@@ -22,8 +24,13 @@ parameterise_ode <- function(parameters) {
         parameters$g0,
         parameters$g,
         parameters$h,
+	parameters$history_f,
+        parameters$history_m,
+	parameters$G0,
+        parameters$KF,
+        parameters$Amax,
         calculate_R_bar(parameters)
-      )
+	)
     }
   )
 }

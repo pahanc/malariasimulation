@@ -249,9 +249,11 @@ get_parameters <- function(overrides = list()) {
     dpl   = .643,
     mup   = .249,
     mum   = .249, #NOTE: set from sitefile
-    G0 = 2,
+    G0 = 5,
     KF = 1,
-    Amax = 3,
+    Amax = 0.003,
+    history_f=rep(5,50),
+    history_m=rep(50,50),
     sigma_squared   = 1.67,
     n_heterogeneity_groups = 5,
     # immunity decay rates
@@ -316,7 +318,7 @@ get_parameters <- function(overrides = list()) {
     gamma = 13.25,
     model_seasonality = FALSE,
     # larval mortality rates
-    me    = .0338,
+    me    = .065,
     ml    = .0348,
     # initial state proportions
     s_proportion = 0.420433246,
@@ -332,7 +334,7 @@ get_parameters <- function(overrides = list()) {
     init_id  = 0,
     init_ib  = 0,
     # vector biology
-    beta     = 21.2,
+    beta     = 3,
     total_M  = 1000,
     init_foim= 0,
     # order of species: An gambiae s.s, An arabiensis, An funestus

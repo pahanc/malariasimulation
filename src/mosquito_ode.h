@@ -27,7 +27,7 @@
  * 2 - P  - Pupal Stage
  * 3 - T -  Larval Development Time
  */
-enum class ODEState : size_t {F,L,P,T};
+enum class ODEState : size_t {Fl,L,P,Tl};
 
 // Provide a convenience function for getting at the index of an enumeration
 template<typename T>
@@ -88,7 +88,7 @@ struct MosquitoModel {
 	double KF,
 	double Amax 
     );
-    virtual void step(size_t,std::vector<double>, std::vector<double>);
+    virtual void step(size_t);
     virtual state_t get_state();
     virtual ~MosquitoModel() {};
 private:
@@ -98,6 +98,7 @@ private:
             boost::numeric::odeint::runge_kutta_dopri5<state_t>
         >
     >rk;
+    boost::numeric::odeint::runge_kutta4< state_t > stepper;
     const double r_tolerance = 1.0e-6;
     const double a_tolerance = 1.0e-6;
     integration_function_t ode;

@@ -22,16 +22,16 @@ create_mosquito_emergence_process_cpp <- function(odes, state, species, species_
     .Call(`_malariasimulation_create_mosquito_emergence_process_cpp`, odes, state, species, species_names, dpl)
 }
 
-create_mosquito_model <- function(init, beta, de, mue, K0, gamma, dl, mul, dp, mup, total_M,history_m,history_f, model_seasonality, days_per_timestep, g0, g, h, R_bar,KF,G0,Amax) {
-    .Call(`_malariasimulation_create_mosquito_model`, init, beta, de, mue, K0, gamma, dl, mul, dp, mup, total_M, history_m,history_f,model_seasonality, days_per_timestep, g0, g, h, R_bar,KF,G0,Amax)
+create_mosquito_model <- function(init, beta, de, mue, K0, gamma, dl, mul, dp, mup, total_M, model_seasonality, days_per_timestep, g0, g, h, history_f, history_m, G0, KF, Amax, R_bar) {
+    .Call(`_malariasimulation_create_mosquito_model`, init, beta, de, mue, K0, gamma, dl, mul, dp, mup, total_M, model_seasonality, days_per_timestep, g0, g, h, history_f, history_m, G0, KF, Amax, R_bar)
 }
 
 mosquito_model_get_states <- function(model) {
     .Call(`_malariasimulation_mosquito_model_get_states`, model)
 }
 
-mosquito_model_step <- function(model, total_M, history_f,history_m) {
-    invisible(.Call(`_malariasimulation_mosquito_model_step`, model, total_M,history_f,history_m))
+mosquito_model_step <- function(model, total_M) {
+    invisible(.Call(`_malariasimulation_mosquito_model_step`, model, total_M))
 }
 
 bernoulli_multi_p_cpp <- function(p) {
