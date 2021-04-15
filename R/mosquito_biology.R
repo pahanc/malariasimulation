@@ -33,6 +33,24 @@ initial_mosquito_counts <- function(parameters, foim = 0, m = NULL) {
   c(n_F, n_L, n_P, n_T, n_Sm, n_Pm, n_Im)
 }
 
+initial_mosquito_counts_ld <- function(parameters) {
+
+  print(paste("KF ",parameters$KF," Amax ",parameters$Amax," me ", parameters$me," beta ", parameters$beta," G0 ",parameters$G0," mum ",parameters$mum))
+
+  F_eq<-parameters$KF/(parameters$Amax*((1/parameters$me)*
+  log(0.5*parameters$beta/parameters$mum))/(5*parameters$Amax)-1)
+  print(paste("F_eq " , F_eq))
+  L_eq<-parameters$G0*((1/parameters$me)*log(0.5*parameters$beta/parameters$mum))/(5*parameters$Amax)
+  print(paste("L_eq " , L_eq))
+  P_eq<-0.3*parameters$me*parameters$G0*(1/parameters$me)*log(0.5*parameters$beta/parameters$mum)/(5*parameters$Amax)
+  print(paste("P_eq " , P_eq))
+  T_eq<-(1/parameters$me)*log(0.5*parameters$beta/parameters$mum)
+  print(paste("T_eq ", T_eq))
+  c(F_eq,L_eq,P_eq,T_eq)
+
+}
+
+
 #' @title Calculate omega value
 #' @description useful value for calculating equilibrium solutions for vectors
 #' taken from

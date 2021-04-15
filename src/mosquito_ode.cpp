@@ -9,6 +9,7 @@
 #include <individual.h>
 #include "mosquito_ode.h"
 #include <sstream>
+#include <fstream>
 #include <iostream>
 using namespace std;
 
@@ -25,31 +26,46 @@ integration_function_t create_ode(MosquitoModel& model) {
             model.R_bar
         );
 	
-	double g_t,g_mTL,t_dlay;
+	double g_t,g_mTL,T_eq;
+	int t_dlay;
+	std::ofstream histories_m,histories_f;
+	T_eq=(1/model.mue)*log(0.5*model.beta/model.mum);
+
+
 	t_dlay=t-x[get_idx(ODEState::Tl)];
-	if (t_dlay<0) t_dlay= -1*t_dlay;
+	//if (t_dlay<0) t_dlay= -1*t_dlay;
 
 	g_t=x[get_idx(ODEState::Fl)]/(model.KF+x[get_idx(ODEState::Fl)]);//larval development rate function
-	g_mTL=model.history_f[t_dlay]/(model.KF + model.history_f[t_dlay]);//larval development rate at 
+	g_mTL=model.history_f[t_dlay+50]/(model.KF + model.history_f[t_dlay+50]);//larval development rate at 
 	//time delay TL
 
 	dxdt[get_idx(ODEState::Fl)]=model.G0-model.Amax*x[get_idx(ODEState::L)]*x[get_idx(ODEState::Fl)]/(model.KF+x[get_idx(ODEState::Fl)]);//larval food supply
 
         dxdt[get_idx(ODEState::L)] = model.beta * (model.total_M) //new eggs
-            - model.beta*model.history_m[t_dlay]*exp(-model.mue*x[get_idx(ODEState::Tl)])*g_t/g_mTL //growth to pupal stage
+            - model.beta*model.history_m[t_dlay+50]*exp(-model.mue*x[get_idx(ODEState::Tl)])*g_t/g_mTL //growth to pupal stage
             - x[get_idx(ODEState::L)] * model.mue; //larval deaths * (1 + (x[get_idx(ODEState::L)] + x[get_idx(ODEState::L)]) / K); 
         
-	dxdt[get_idx(ODEState::P)] = model.beta*model.history_m[t_dlay]*exp(-model.mue*x[get_idx(ODEState::Tl)])*g_t/g_mTL
+	dxdt[get_idx(ODEState::P)] = model.beta*model.history_m[t_dlay+50]*exp(-model.mue*x[get_idx(ODEState::Tl)])*g_t/g_mTL
 	       	//growth to pupae
             - x[get_idx(ODEState::P)] / model.dp //growth to adult
             - x[get_idx(ODEState::P)] * model.mup; // death of pupae
 	
 	dxdt[get_idx(ODEState::Tl)]=1-g_t/g_mTL;//time varying larval development rate
 	
-	if (t<2 && int(100*t) % 5==0 ) Rcpp::Rcout  << "dxdt[0] " << dxdt[0]  << " t " << t << " t_dlay " << t-x[get_idx(ODEState::Tl)] <<  endl;
-	if (t<2  ) Rcpp::Rcout << "Fl " << x[get_idx(ODEState::Fl)] << " L " << x[get_idx(ODEState::L)] << " P " << x[get_idx(ODEState::P)]<< " Tl " << x[get_idx(ODEState::Tl)] << " t  " << t << endl;
-	if (t<2  ) Rcpp::Rcout << " beta " <<  model.beta  << " total_M " << model.total_M << endl;
-	if (t<2  ) Rcpp::Rcout << "g_t " << g_t << " g_mTL " << g_mTL << endl;
+	if (/*t>60 && */ t<2 /*&& int(100*t) % 5==0*/ ) Rcpp::Rcout  << "dxdt[0] " << dxdt[0]  << " t " << t << " t_dlay " << t-x[get_idx(ODEState::Tl)] <<  endl;
+	if (/*t>60 && */  t<2) Rcpp::Rcout << "Fl " << x[get_idx(ODEState::Fl)] << " L " << x[get_idx(ODEState::L)] << " P " << x[get_idx(ODEState::P)]<< " Tl " << x[get_idx(ODEState::Tl)] << " t  " << t << endl;
+	if (/*t>60 && */  t<2) Rcpp::Rcout << " beta " <<  model.beta  << " total_M " << model.total_M << endl;
+	if (/*t>60 && */  t<2) Rcpp::Rcout << "g_t " << g_t << " g_mTL " << g_mTL << endl;
+
+	if (t==1000) {
+		histories_m.open("histories_m.txt");
+		histories_f.open("histories_f.txt");
+		Rcpp::Rcout << " history_f " << model.history_f[1] << endl;
+		for (std::vector<double>::iterator i=model.history_f.begin(); i<model.history_f.end(); i++){
+			histories_f << *i << endl;
+			//histories_m << model.history_m[i] << endl;
+		}
+	}
 	//Rcpp:Rcout << " KF " << model.KF << " mue " << model.mue << endl;
 	//Rcpp::Rcout << " G0 " << model.G0 << endl;
     };
@@ -77,6 +93,7 @@ MosquitoModel::MosquitoModel(
     double G0,
     double KF,
     double Amax, 
+    double mum,
     double R_bar
     ):
     beta(beta),
@@ -99,6 +116,7 @@ MosquitoModel::MosquitoModel(
     G0(G0),
     KF(KF),
     Amax(Amax),
+    mum(mum),
     R_bar(R_bar)
     {
     for (auto i = 0u; i < state.size(); ++i) {
@@ -149,6 +167,7 @@ Rcpp::XPtr<MosquitoModel> create_mosquito_model(
     double G0,
     double KF,
     double Amax, 
+    double mum,
     double R_bar
     ) {
     auto model = new MosquitoModel(
@@ -173,6 +192,7 @@ Rcpp::XPtr<MosquitoModel> create_mosquito_model(
 	G0,
 	KF,
 	Amax,
+	mum,
         R_bar	
     );
     return Rcpp::XPtr<MosquitoModel>(model, true);

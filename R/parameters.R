@@ -239,6 +239,14 @@
 #' @export
 get_parameters <- function(overrides = list()) {
   days_per_timestep <- 1
+  #larval delay model parameters
+  Amax<-0.003;KF<-1;G0<-1;mul<-0.04;mum<-0.249;beta=3
+  #Equilibrium food
+  F_eq<-KF/(Amax*((1/mul)*log(0.5*beta/mum))/(5*Amax)-1)
+  #Equilibrium adults
+  M_eq<-mul*G0*(1/mul)*log(0.5*beta/mum)/(5*Amax)/(0.5*beta-mum)
+  #Equilibrium larval development
+  T_eq<-(1/mul)*log(0.5*beta/mum)
   parameters <- list(
     dd    = 5,
     dt    = 5,
@@ -247,13 +255,13 @@ get_parameters <- function(overrides = list()) {
     del   = 6.64,
     dl    = 3.72,
     dpl   = .643,
-    mup   = .249,
-    mum   = .249, #NOTE: set from sitefile
-    G0 = 5,
-    KF = 1,
-    Amax = 0.003,
-    history_f=rep(5,50),
-    history_m=rep(50,50),
+    mup   = 0,#.249,
+    mum   = mum, #NOTE: set from sitefile
+    G0 = G0,
+    KF = KF,
+    Amax = Amax,
+    history_f=rep(,1.5*T_eq),
+    history_m=rep(,1.5*T_eq),
     sigma_squared   = 1.67,
     n_heterogeneity_groups = 5,
     # immunity decay rates
@@ -318,7 +326,7 @@ get_parameters <- function(overrides = list()) {
     gamma = 13.25,
     model_seasonality = FALSE,
     # larval mortality rates
-    me    = .065,
+    me    = mul,
     ml    = .0348,
     # initial state proportions
     s_proportion = 0.420433246,
@@ -334,8 +342,8 @@ get_parameters <- function(overrides = list()) {
     init_id  = 0,
     init_ib  = 0,
     # vector biology
-    beta     = 3,
-    total_M  = 1000,
+    beta     = beta,
+    total_M  = mul*G0*(1/mul)*log(0.5*beta/mum)/(5*Amax)/(beta-mum),
     init_foim= 0,
     # order of species: An gambiae s.s, An arabiensis, An funestus
     species             = 'All',

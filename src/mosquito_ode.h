@@ -62,6 +62,7 @@ struct MosquitoModel {
     const double G0;
     const double KF;
     const double Amax;
+    const double mum;
     std::queue<double> lagged_incubating; //last tau values for incubating mosquitos
 
     MosquitoModel(
@@ -86,7 +87,8 @@ struct MosquitoModel {
         double R_bar,
 	double G0,
 	double KF,
-	double Amax 
+	double Amax,
+	double mum
     );
     virtual void step(size_t);
     virtual state_t get_state();
