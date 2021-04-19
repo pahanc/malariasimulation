@@ -8,7 +8,6 @@ parameterise_ode <- function(parameters) {
       m <- p * parameters$total_M
       create_mosquito_model(
         initial_mosquito_counts_ld(parameters)[ODE_INDICES],
-	#c(0.5,1200,10,25),
 	parameters$beta,
         parameters$del,
         parameters$me,
@@ -30,7 +29,7 @@ parameterise_ode <- function(parameters) {
         parameters$KF,
         parameters$Amax,
 	parameters$mum,
-        calculate_R_bar(parameters)
+	calculate_R_bar(parameters)
 	)
     }
   )

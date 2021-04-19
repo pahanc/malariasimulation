@@ -25,7 +25,7 @@ struct MockCategory : public CategoricalVariable {
 class MockODE : public MosquitoModel {
 public:
     MockODE() : MosquitoModel(
-        std::vector<double>{0, 0, 0},
+        std::vector<double>{0, 0, 0, 0},
         0,
         0,
         0,
@@ -47,7 +47,7 @@ public:
 	0,
 	0,
 	0,
-        0
+	0
     ) {};
     MAKE_MOCK0(get_state, state_t(), override);
 };

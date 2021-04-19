@@ -37,14 +37,16 @@ initial_mosquito_counts_ld <- function(parameters) {
 
   print(paste("KF ",parameters$KF," Amax ",parameters$Amax," me ", parameters$me," beta ", parameters$beta," G0 ",parameters$G0," mum ",parameters$mum))
 
-  F_eq<-parameters$KF/(parameters$Amax*((1/parameters$me)*
-  log(0.5*parameters$beta/parameters$mum))/(5*parameters$Amax)-1)
+  KF<-parameters$KF; Amax<-parameters$Amax; G0<-parameters$G0; beta<-parameters$beta; me<-parameters$me; mum<-parameters$mum 
+
+  F_eq<-KF/(Amax*((1/me)*
+  log(0.5*beta/mum))/(5*Amax)-1)
   print(paste("F_eq " , F_eq))
-  L_eq<-parameters$G0*((1/parameters$me)*log(0.5*parameters$beta/parameters$mum))/(5*parameters$Amax)
+  L_eq<-G0*((1/me)*log(0.5*beta/mum))/(5*Amax)
   print(paste("L_eq " , L_eq))
-  P_eq<-0.3*parameters$me*parameters$G0*(1/parameters$me)*log(0.5*parameters$beta/parameters$mum)/(5*parameters$Amax)
+  P_eq<-0.3*me*G0*(1/me)*log(0.5*beta/mum)/(5*Amax)/(beta-mum)
   print(paste("P_eq " , P_eq))
-  T_eq<-(1/parameters$me)*log(0.5*parameters$beta/parameters$mum)
+  T_eq<-(1/me)*log(0.5*beta/mum)
   print(paste("T_eq ", T_eq))
   c(F_eq,L_eq,P_eq,T_eq)
 

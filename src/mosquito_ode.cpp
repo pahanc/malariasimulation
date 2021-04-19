@@ -26,26 +26,25 @@ integration_function_t create_ode(MosquitoModel& model) {
             model.R_bar
         );
 	
-	double g_t,g_mTL,T_eq;
-	int t_dlay;
+	double g_t,g_mTL;
+	int t_dlay,T_eq;
 	std::ofstream histories_m,histories_f;
 	T_eq=(1/model.mue)*log(0.5*model.beta/model.mum);
 
 
 	t_dlay=t-x[get_idx(ODEState::Tl)];
-	//if (t_dlay<0) t_dlay= -1*t_dlay;
 
 	g_t=x[get_idx(ODEState::Fl)]/(model.KF+x[get_idx(ODEState::Fl)]);//larval development rate function
-	g_mTL=model.history_f[t_dlay+50]/(model.KF + model.history_f[t_dlay+50]);//larval development rate at 
+	g_mTL=model.history_f[t_dlay+1.5*T_eq]/(model.KF + model.history_f[t_dlay+1.5*T_eq]);//larval development rate at 
 	//time delay TL
 
 	dxdt[get_idx(ODEState::Fl)]=model.G0-model.Amax*x[get_idx(ODEState::L)]*x[get_idx(ODEState::Fl)]/(model.KF+x[get_idx(ODEState::Fl)]);//larval food supply
 
         dxdt[get_idx(ODEState::L)] = model.beta * (model.total_M) //new eggs
-            - model.beta*model.history_m[t_dlay+50]*exp(-model.mue*x[get_idx(ODEState::Tl)])*g_t/g_mTL //growth to pupal stage
+            - model.beta*model.history_m[t_dlay+1.5*T_eq]*exp(-model.mue*x[get_idx(ODEState::Tl)])*g_t/g_mTL //growth to pupal stage
             - x[get_idx(ODEState::L)] * model.mue; //larval deaths * (1 + (x[get_idx(ODEState::L)] + x[get_idx(ODEState::L)]) / K); 
         
-	dxdt[get_idx(ODEState::P)] = model.beta*model.history_m[t_dlay+50]*exp(-model.mue*x[get_idx(ODEState::Tl)])*g_t/g_mTL
+	dxdt[get_idx(ODEState::P)] = model.beta*model.history_m[t_dlay+1.5*T_eq]*exp(-model.mue*x[get_idx(ODEState::Tl)])*g_t/g_mTL
 	       	//growth to pupae
             - x[get_idx(ODEState::P)] / model.dp //growth to adult
             - x[get_idx(ODEState::P)] * model.mup; // death of pupae
@@ -56,6 +55,7 @@ integration_function_t create_ode(MosquitoModel& model) {
 	if (/*t>60 && */  t<2) Rcpp::Rcout << "Fl " << x[get_idx(ODEState::Fl)] << " L " << x[get_idx(ODEState::L)] << " P " << x[get_idx(ODEState::P)]<< " Tl " << x[get_idx(ODEState::Tl)] << " t  " << t << endl;
 	if (/*t>60 && */  t<2) Rcpp::Rcout << " beta " <<  model.beta  << " total_M " << model.total_M << endl;
 	if (/*t>60 && */  t<2) Rcpp::Rcout << "g_t " << g_t << " g_mTL " << g_mTL << endl;
+
 
 	if (t==1000) {
 		histories_m.open("histories_m.txt");

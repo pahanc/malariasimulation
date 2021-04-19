@@ -239,14 +239,16 @@
 #' @export
 get_parameters <- function(overrides = list()) {
   days_per_timestep <- 1
-  #larval delay model parameters
-  Amax<-0.003;KF<-1;G0<-1;mul<-0.04;mum<-0.249;beta=3
-  #Equilibrium food
-  F_eq<-KF/(Amax*((1/mul)*log(0.5*beta/mum))/(5*Amax)-1)
-  #Equilibrium adults
-  M_eq<-mul*G0*(1/mul)*log(0.5*beta/mum)/(5*Amax)/(0.5*beta-mum)
-  #Equilibrium larval development
-  T_eq<-(1/mul)*log(0.5*beta/mum)
+  	#larval delay model parameters
+  	Amax<-0.003;KF<-1;G0<-1;mul<-0.04;mum<-0.249;beta=3
+  	
+	#Equilibrium food
+  	F_eq<-KF/(Amax*((1/mul)*log(0.5*beta/mum))/(5*Amax)-1)
+  	#Equilibrium adults
+  	M_eq<-mul*G0*(1/mul)*log(0.5*beta/mum)/(5*Amax)/(beta-mum)
+ 	 #Equilibrium larval development
+	T_eq<-(1/mul)*log(0.5*beta/mum)
+
   parameters <- list(
     dd    = 5,
     dt    = 5,
@@ -260,8 +262,8 @@ get_parameters <- function(overrides = list()) {
     G0 = G0,
     KF = KF,
     Amax = Amax,
-    history_f=rep(,1.5*T_eq),
-    history_m=rep(,1.5*T_eq),
+    history_f=rep(F_eq,1.5*T_eq),
+    history_m=rep(M_eq,1.5*T_eq),
     sigma_squared   = 1.67,
     n_heterogeneity_groups = 5,
     # immunity decay rates
