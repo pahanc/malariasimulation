@@ -7,6 +7,12 @@
 
 #include <Rcpp.h>
 #include "mosquito_ode.h"
+#include "mosquito_ode.h"
+#include <sstream>
+#include <fstream>
+#include <iostream>
+using namespace std;
+
 
 integration_function_t create_ode(MosquitoModel& model) {
     return [&model](const state_t& x, state_t& dxdt, double t) {
@@ -22,9 +28,32 @@ integration_function_t create_ode(MosquitoModel& model) {
         auto beta = eggs_laid(model.beta, model.mum, model.f);
         auto n_larvae = x[get_idx(ODEState::E)] + x[get_idx(ODEState::L)];
 
+	double K_max;
+	double K_day[365];
+	for (int i=0;i<365;i++){
+		K_day[i] = carrying_capacity(
+            i,
+            model.model_seasonality,
+            model.g0,
+            model.g,
+            model.h,
+            model.K0,
+            model.R_bar
+        );
+	}
+	K_max=*std::max_element(K_day,K_day+365);//different for each species
+	//if (int(100*t) % 500==0) Rcpp::Rcout <<"K_max " << K_max <<" t " << t << endl;
+	//if (int(100*t) % 500==0) { 
+	//	for (int i=0;i<365;i++) Rcpp::Rcout << K_day[i] << " ";
+	//Rcpp::Rcout << endl;
+	//}
+	
+	K=K+K_max/100000;
+
+
         dxdt[get_idx(ODEState::E)] = beta * (model.total_M) //new eggs
             - x[get_idx(ODEState::E)] / model.de //growth to late larval stage
-            - x[get_idx(ODEState::E)] * model.mue * (1 + n_larvae / K); //early larval deaths
+            - x[get_idx(ODEState::E)] * model.mue * (1 + model.gamma * n_larvae / K); //early larval deaths
 
         dxdt[get_idx(ODEState::L)] = x[get_idx(ODEState::E)] / model.de //growth from early larval
             - x[get_idx(ODEState::L)] / model.dl //growth to pupal
