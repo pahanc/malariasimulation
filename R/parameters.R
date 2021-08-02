@@ -244,9 +244,9 @@ get_parameters <- function(overrides = list()) {
     da    = 200,
     du    = 110,
     del   = 5,
-    dl    = 4,
+    dl    = 5,
     dpl   = 1,
-    mup   = 0.05,
+    mup   = .1253333,
     mum   = .1253333,
     sigma_squared   = 1.67,
     n_heterogeneity_groups = 5,
@@ -313,8 +313,8 @@ get_parameters <- function(overrides = list()) {
     gamma = 6.5,
     model_seasonality = FALSE,
     # larval mortality rates
-    me    = .0338,
-    ml    = .0348,
+    me    = .05,
+    ml    = .05,
     # initial state proportions
     s_proportion = 0.420433246,
     d_proportion = 0.007215064,

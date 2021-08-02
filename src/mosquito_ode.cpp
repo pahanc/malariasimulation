@@ -48,7 +48,7 @@ integration_function_t create_ode(MosquitoModel& model) {
 	//Rcpp::Rcout << endl;
 	//}
 	
-	K=K+K_max/100000;
+	K=K+0.000065*K_max;
 
 
         dxdt[get_idx(ODEState::E)] = beta * (model.total_M) //new eggs
