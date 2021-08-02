@@ -190,6 +190,7 @@ create_variables <- function(parameters) {
     spray_time = spray_time
   )
 
+
   species <- individual::CategoricalVariable$new(
     parameters$species,
     sample(

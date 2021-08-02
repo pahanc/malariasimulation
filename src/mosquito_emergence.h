@@ -15,7 +15,7 @@ Rcpp::XPtr<process_t> create_mosquito_emergence_process_cpp(
     Rcpp::XPtr<CategoricalVariable>,
     Rcpp::XPtr<CategoricalVariable>,
     std::vector<std::string>,
-    double
-);
+    std::vector<double>,
+    double);
 
 #endif /* SRC_MOSQUITO_EMERGENCE_H_ */

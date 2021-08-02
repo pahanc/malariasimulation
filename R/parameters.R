@@ -249,6 +249,10 @@ get_parameters <- function(overrides = list()) {
  	 #Equilibrium larval development
 	T_eq<-(1/mul)*log(0.5*beta/mum)
 
+  mosq_suppression<-unlist(read.csv("/Imperial March 2021/malariasimulation/mosquito_suppression.csv",header=F,colClasses="numeric"))
+  dimnames(mosq_suppression)<-NULL
+  mosq_suppression<-as.vector(mosq_suppression)
+
   parameters <- list(
     dd    = 5,
     dt    = 5,
@@ -264,6 +268,7 @@ get_parameters <- function(overrides = list()) {
     Amax = Amax,
     history_f=rep(F_eq,1.5*T_eq),
     history_m=rep(M_eq,1.5*T_eq),
+    mosq_suppression=mosq_suppression,
     sigma_squared   = 1.67,
     n_heterogeneity_groups = 5,
     # immunity decay rates
@@ -326,7 +331,7 @@ get_parameters <- function(overrides = list()) {
     g     = c(.3, .6, .9),
     h     = c(.1, .4, .7),
     gamma = 13.25,
-    model_seasonality = FALSE,
+    model_seasonality = TRUE,
     # larval mortality rates
     me    = mul,
     ml    = .0348,
@@ -349,10 +354,10 @@ get_parameters <- function(overrides = list()) {
     init_foim= 0,
     # order of species: An gambiae s.s, An arabiensis, An funestus
     species             = 'All',
-    species_proportions = 1,
+    species_proportions = c(0.25,0.5,0.25),
     blood_meal_rates    = 1/3,
-    Q0                  = .92,
-    endophily           = .813,
+    Q0                  = c(.92,0.6,0.92),
+    endophily           = c(.813,0.6,0.813),
     foraging_time       = .69,
     # bed nets
     bednets = FALSE,

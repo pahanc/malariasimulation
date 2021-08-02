@@ -40,8 +40,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // create_mosquito_emergence_process_cpp
-Rcpp::XPtr<process_t> create_mosquito_emergence_process_cpp(Rcpp::List odes, Rcpp::XPtr<CategoricalVariable> state, Rcpp::XPtr<CategoricalVariable> species, std::vector<std::string> species_names, double dpl);
-RcppExport SEXP _malariasimulation_create_mosquito_emergence_process_cpp(SEXP odesSEXP, SEXP stateSEXP, SEXP speciesSEXP, SEXP species_namesSEXP, SEXP dplSEXP) {
+Rcpp::XPtr<process_t> create_mosquito_emergence_process_cpp(Rcpp::List odes, Rcpp::XPtr<CategoricalVariable> state, Rcpp::XPtr<CategoricalVariable> species, std::vector<std::string> species_names, std::vector<double> mosq_suppression, double dpl);
+RcppExport SEXP _malariasimulation_create_mosquito_emergence_process_cpp(SEXP odesSEXP, SEXP stateSEXP, SEXP speciesSEXP, SEXP species_namesSEXP, SEXP mosq_suppressionSEXP, SEXP dplSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -49,8 +49,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::XPtr<CategoricalVariable> >::type state(stateSEXP);
     Rcpp::traits::input_parameter< Rcpp::XPtr<CategoricalVariable> >::type species(speciesSEXP);
     Rcpp::traits::input_parameter< std::vector<std::string> >::type species_names(species_namesSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type mosq_suppression(mosq_suppressionSEXP);
     Rcpp::traits::input_parameter< double >::type dpl(dplSEXP);
-    rcpp_result_gen = Rcpp::wrap(create_mosquito_emergence_process_cpp(odes, state, species, species_names, dpl));
+    rcpp_result_gen = Rcpp::wrap(create_mosquito_emergence_process_cpp(odes, state, species, species_names, mosq_suppression, dpl));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -126,7 +127,7 @@ RcppExport SEXP run_testthat_tests();
 static const R_CallMethodDef CallEntries[] = {
     {"_malariasimulation_carrying_capacity", (DL_FUNC) &_malariasimulation_carrying_capacity, 8},
     {"_malariasimulation_rainfall", (DL_FUNC) &_malariasimulation_rainfall, 5},
-    {"_malariasimulation_create_mosquito_emergence_process_cpp", (DL_FUNC) &_malariasimulation_create_mosquito_emergence_process_cpp, 5},
+    {"_malariasimulation_create_mosquito_emergence_process_cpp", (DL_FUNC) &_malariasimulation_create_mosquito_emergence_process_cpp, 6},
     {"_malariasimulation_create_mosquito_model", (DL_FUNC) &_malariasimulation_create_mosquito_model, 23},
     {"_malariasimulation_mosquito_model_get_states", (DL_FUNC) &_malariasimulation_mosquito_model_get_states, 1},
     {"_malariasimulation_mosquito_model_step", (DL_FUNC) &_malariasimulation_mosquito_model_step, 2},

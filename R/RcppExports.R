@@ -17,9 +17,11 @@ rainfall <- function(t, days_per_timestep, g0, g, h) {
 #' @param state the variable for the mosquito state
 #' @param species the variable for the mosquito species
 #' @param species_names a vector of category names for the species variable
+NULL
+
 #' @param dpl the delay for pupal growth (in timesteps)
-create_mosquito_emergence_process_cpp <- function(odes, state, species, species_names, dpl) {
-    .Call(`_malariasimulation_create_mosquito_emergence_process_cpp`, odes, state, species, species_names, dpl)
+create_mosquito_emergence_process_cpp <- function(odes, state, species, species_names, mosq_suppression, dpl) {
+    .Call(`_malariasimulation_create_mosquito_emergence_process_cpp`, odes, state, species, species_names, mosq_suppression, dpl)
 }
 
 create_mosquito_model <- function(init, beta, de, mue, K0, gamma, dl, mul, dp, mup, total_M, model_seasonality, days_per_timestep, g0, g, h, history_f, history_m, G0, KF, Amax, mum, R_bar) {

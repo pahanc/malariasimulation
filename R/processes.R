@@ -18,6 +18,7 @@ create_processes <- function(
   odes,
   correlations
   ) {
+
   processes <- list(
     # ========
     # Immunity
@@ -32,12 +33,13 @@ create_processes <- function(
     create_exponential_decay_process(variables$ica, parameters$rc),
     create_exponential_decay_process(variables$iva, parameters$rva),
     create_exponential_decay_process(variables$id, parameters$rid),
-
+    
     create_mosquito_emergence_process_cpp(
       odes,
       variables$mosquito_state$.variable,
       variables$species$.variable,
       parameters$species,
+      parameters$mosq_suppression,  
       parameters$dpl
     ),
 

@@ -5,9 +5,15 @@
  *      Author: gc1610
  */
 
+#include <Rcpp.h>
 #include "mosquito_emergence.h"
 #include "mosquito_ode.h"
 #include <sstream>
+#include <fstream>
+#include <iostream>
+using namespace std;
+
+
 
 //' @title Mosquito emergence process
 //' @description Move mosquitos from NonExistent to Sm in line with the number of
@@ -17,6 +23,7 @@
 //' @param state the variable for the mosquito state
 //' @param species the variable for the mosquito species
 //' @param species_names a vector of category names for the species variable
+////' @param mosq_suppression a vector of proportional suppresssion of mosquito emergence (due to GM mossies)
 //' @param dpl the delay for pupal growth (in timesteps)
 //[[Rcpp::export]]
 Rcpp::XPtr<process_t> create_mosquito_emergence_process_cpp(
@@ -24,14 +31,16 @@ Rcpp::XPtr<process_t> create_mosquito_emergence_process_cpp(
     Rcpp::XPtr<CategoricalVariable> state,
     Rcpp::XPtr<CategoricalVariable> species,
     std::vector<std::string> species_names,
-    double dpl
-    ) {
+    std::vector<double> mosq_suppression,
+    double dpl) {
+    //double mosq_suppression=0.5;
     auto rate = .5 * 1./dpl;
     return Rcpp::XPtr<process_t>(
         new process_t([=] (size_t t) {
-            auto n = 0u;
-            for (Rcpp::XPtr<MosquitoModel> ode : odes) {
-                n += ode->get_state()[get_idx(ODEState::P)] * rate;
+	    auto n = 0u;
+	    //Rcpp::Rcout << "mosq_suppression[t] " << mosq_suppression[t] << endl;
+	    for (Rcpp::XPtr<MosquitoModel> ode : odes) {
+                n += ode->get_state()[get_idx(ODEState::P)] * rate* mosq_suppression[t];
             }
             auto source = state->get_index_of(std::vector<std::string>{"NonExistent"});
             if (source.size() < n) {
@@ -47,7 +56,7 @@ Rcpp::XPtr<process_t> create_mosquito_emergence_process_cpp(
                 auto species_i = 0u;
                 auto sourceit = source.begin();
                 for (Rcpp::XPtr<MosquitoModel> ode : odes) {
-                    auto to_set = static_cast<size_t>(ode->get_state()[get_idx(ODEState::P)] * rate);
+                    auto to_set = static_cast<size_t>(ode->get_state()[get_idx(ODEState::P)] * rate  * mosq_suppression[t]);
                     auto target = individual_index_t(state->size);
                     for (auto i = 0u; i < to_set; ++i) {
                         target.insert(*sourceit);
